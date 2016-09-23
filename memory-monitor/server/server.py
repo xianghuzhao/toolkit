@@ -19,22 +19,30 @@ db = SQLAlchemy(app)
 class Proc(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String)
+    created_at = db.Column(db.DateTime)
 
-    def __init__(self, name):
+    def __init__(self, name, created_at=None):
         self.name = name
+        if created_at is None:
+            created_at = datetime.datetime.utcnow()
+        self.created_at = created_at
 
 class Mem(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    mem = db.Column(db.Integer)
+    rss = db.Column(db.Integer)
+    uss = db.Column(db.Integer)
+    swap = db.Column(db.Integer)
     created_at = db.Column(db.DateTime)
 
     proc_id = db.Column(db.Integer, db.ForeignKey('proc.id'))
     proc = db.relationship('Proc',
         backref=db.backref('mems', lazy='dynamic'))
 
-    def __init__(self, mem, proc, created_at=None):
-        self.mem = mem
+    def __init__(self, proc, rss, uss, swap, created_at=None):
         self.proc = proc
+        self.rss = rss
+        self.uss = uss
+        self.swap = swap
         if created_at is None:
             created_at = datetime.datetime.utcnow()
         self.created_at = created_at
@@ -53,12 +61,14 @@ def proc():
 
 @app.route("/mem", methods=['POST'])
 def mem():
-    mem = request.form.get('mem')
     proc_id = request.form.get('proc_id')
+    rss = request.form.get('rss')
+    uss = request.form.get('uss')
+    swap = request.form.get('swap')
     created_at = request.form.get('created_at')
 
     p = Proc.query.get(proc_id)
-    m = Mem(mem, p, created_at)
+    m = Mem(p, rss, uss, swap, created_at)
     db.session.add(m)
     db.session.commit()
     return str(m.id)
@@ -71,7 +81,7 @@ def procs():
 @app.route("/mems", methods=['GET'])
 def mems():
     m = Mem.query.all()
-    return jsonify([{'id':i.id, 'mem':i.mem, 'proc_id':i.proc_id, 'created_at': i.created_at} for i in m])
+    return jsonify([{'id':i.id, 'proc_id':i.proc_id, 'rss':i.rss, 'uss':i.uss, 'swap':i.swap, 'created_at': i.created_at} for i in m])
 
 if __name__ == "__main__":
     db.create_all()
