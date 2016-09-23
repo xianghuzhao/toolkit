@@ -18,11 +18,15 @@ db = SQLAlchemy(app)
 
 class Proc(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String)
+    vmid = db.Column(db.String, index=True)
+    hostname = db.Column(db.String, index=True)
+    pid = db.Column(db.Integer, index=True)
     created_at = db.Column(db.DateTime)
 
-    def __init__(self, name, created_at=None):
-        self.name = name
+    def __init__(self, vmid, hostname, pid, created_at=None):
+        self.vmid = vmid
+        self.hostname = hostname
+        self.pid = pid
         if created_at is None:
             created_at = datetime.datetime.utcnow()
         self.created_at = created_at
@@ -54,7 +58,12 @@ def hello():
 
 @app.route("/proc", methods=['POST'])
 def proc():
-    p = Proc(request.form.get('name'))
+    vmid = request.form.get('vmid')
+    hostname = request.form.get('hostname')
+    pid = int(request.form.get('pid'))
+    created_at = request.form.get('created_at')
+
+    p = Proc(vmid, hostname, pid, created_at)
     db.session.add(p)
     db.session.commit()
     return str(p.id)
@@ -76,12 +85,22 @@ def mem():
 @app.route("/procs", methods=['GET'])
 def procs():
     p = Proc.query.all()
-    return jsonify([{'id':i.id, 'name':i.name} for i in p])
+    return jsonify([{'id':i.id, 'vmid':i.vmid, 'hostname':i.hostname, 'pid':i.pid, 'created_at':i.created_at} for i in p])
+
+@app.route("/findproc", methods=['GET'])
+def findproc():
+    vmid = request.args.get('vmid')
+    hostname = request.args.get('hostname')
+    pid = int(request.args.get('pid'))
+    p = Proc.query.filter_by(vmid=vmid, hostname=hostname, pid=pid).first()
+    if p is None:
+        return 'unknown'
+    return str(p.id)
 
 @app.route("/mems", methods=['GET'])
 def mems():
     m = Mem.query.all()
-    return jsonify([{'id':i.id, 'proc_id':i.proc_id, 'rss':i.rss, 'uss':i.uss, 'swap':i.swap, 'created_at': i.created_at} for i in m])
+    return jsonify([{'id':i.id, 'proc_id':i.proc_id, 'rss':i.rss, 'uss':i.uss, 'swap':i.swap, 'created_at':i.created_at} for i in m])
 
 if __name__ == "__main__":
     db.create_all()
