@@ -1,3 +1,3 @@
 # Toolkits
 
-This repository contains several toolkits used IHEP distributed computing system.
+This repository contains several toolkits used for IHEP distributed computing system.
