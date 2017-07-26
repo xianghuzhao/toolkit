@@ -16,7 +16,7 @@ grant()
 {
   echo "`date '+[%F %T %z]'`: Granting $1..."
   echo "CREATE DATABASE IF NOT EXISTS \`$1\`" | mysql -u$user -p$passwd
-  echo "GRANT SELECT,INSERT,UPDATE,DELETE,CREATE,DROP,INDEX,ALTER,LOCK TABLES,CREATE VIEW,SHOW VIEW,CREATE ROUTINE,ALTER ROUTINE,TRIGGER ON \`$1\`.* TO 'Dirac'@'$host'" | mysql -u$user -p$passwd
+  echo "GRANT SELECT,INSERT,UPDATE,DELETE,CREATE,DROP,REFERENCES,INDEX,ALTER,LOCK TABLES,CREATE VIEW,SHOW VIEW,CREATE ROUTINE,ALTER ROUTINE,TRIGGER ON \`$1\`.* TO 'Dirac'@'$host'" | mysql -u$user -p$passwd
   echo "`date '+[%F %T %z]'`: Granting $1 Finished"
   echo '--------------------------------------------------------------------------------'
 }
