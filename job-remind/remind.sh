@@ -2,9 +2,10 @@
 
 source /opt/dirac/bashrc
 
-min_number=100
-user='xxx'
-mail='xxx@ihep.ac.cn'
+min_number=1000
+user='byzhang'
+mail='byzhang@ihep.ac.cn'
+admin_mail='zhaoxh@ihep.ac.cn'
 
 cd $(dirname "$0")
 
@@ -15,6 +16,8 @@ echo '==========================================================================
 date '+%Y-%m-%d %H:%M:%S.%N %z %Z'
 
 waiting_number=$(./check_job.py $user Waiting)
+
+echo "Current waiting job number is $waiting_number"
 
 
 if [ "$waiting_number" -lt "$min_number" ]; then
@@ -34,8 +37,8 @@ dirac.ihep.ac.cn
 EOF
 )
 
-  echo "Sending email to $mail"
-  echo -e "$mail_content" | mail -s "$mail_subject" "$mail"
+  echo "Sending remind email to $mail"
+  echo -e "$mail_content" | mail -s "$mail_subject" "$mail" "$admin_mail"
 fi
 
 
