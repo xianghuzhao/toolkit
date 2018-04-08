@@ -1,7 +1,7 @@
 #!/bin/bash
 
 days_to_keep=60
-ldsb_days_to_keep=7
+ldsb_days_to_keep=15
 
 logfile='output.log'
 
