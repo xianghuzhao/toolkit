@@ -1,4 +1,4 @@
-use ResourceManagementDB;
+use ResourceStatusDB;
 
 
 drop table if exists ComponentStatus;
