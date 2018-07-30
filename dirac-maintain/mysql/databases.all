@@ -11,6 +11,7 @@ PilotAgentsDB
 ProxyDB
 ReqDB
 ResourceManagementDB
+ResourceManagementIHEPDB
 ResourceStatusDB
 SandboxMetadataDB
 StorageManagementDB
