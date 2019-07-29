@@ -2,7 +2,7 @@ AccountingDB
 ComponentMonitoringDB
 DataIntegrityDB
 FileCatalogDB
-FTSDB
+FTS3DB
 InstalledComponentsDB
 JobDB
 JobLoggingDB
