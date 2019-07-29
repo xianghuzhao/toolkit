@@ -14,6 +14,10 @@ source $cur_dir/../start.sh
 
 convert_sql()
 {
+  if [ ! -f $1.sql ]; then
+    return
+  fi
+
   echo "`date '+[%F %T %z]'`: Migrating sql $1..."
   mysql -u$user -p$passwd < $1.sql
   echo "`date '+[%F %T %z]'`: Migrating sql $1 Finished"
@@ -23,6 +27,10 @@ convert_sql()
 
 convert_py()
 {
+  if [ ! -f $1.py ]; then
+    return
+  fi
+
   echo "`date '+[%F %T %z]'`: Migrating py $1..."
   ./$1.py $user $passwd
   echo "`date '+[%F %T %z]'`: Migrating py $1 Finished"
@@ -33,6 +41,5 @@ convert_py()
 cd $workdir
 
 
-#convert_py AccountingDB
-
 run_on_all_db convert_sql
+run_on_all_db convert_py
