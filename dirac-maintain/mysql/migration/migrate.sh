@@ -38,8 +38,22 @@ convert_py()
 }
 
 
+convert_sh()
+{
+  if [ ! -f $1.sh ]; then
+    return
+  fi
+
+  echo "`date '+[%F %T %z]'`: Migrating py $1..."
+  ./$1.sh $user $passwd
+  echo "`date '+[%F %T %z]'`: Migrating py $1 Finished"
+  echo '--------------------------------------------------------------------------------'
+}
+
+
 cd $workdir
 
 
 run_on_all_db convert_sql
 run_on_all_db convert_py
+run_on_all_db convert_sh
