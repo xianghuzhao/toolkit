@@ -44,9 +44,9 @@ convert_sh()
     return
   fi
 
-  echo "`date '+[%F %T %z]'`: Migrating py $1..."
+  echo "`date '+[%F %T %z]'`: Migrating sh $1..."
   ./$1.sh $user $passwd
-  echo "`date '+[%F %T %z]'`: Migrating py $1 Finished"
+  echo "`date '+[%F %T %z]'`: Migrating sh $1 Finished"
   echo '--------------------------------------------------------------------------------'
 }
 
